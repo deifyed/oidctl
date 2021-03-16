@@ -19,6 +19,7 @@ OS     := $(shell uname)
 # only recommended to change the BUILD_DIR
 # option.
 BUILD_DIR     := build
+INSTALL_DIR   := ~/.local/bin
 RELEASE_DIR   := $(BUILD_DIR)/release
 LINT_DIR      := $(BUILD_DIR)/lint
 TEST_DIR      := $(BUILD_DIR)/test
@@ -184,3 +185,8 @@ test-coverage: fmt lint test-coverage-tools
 	@$(GOCOVMERGE) $(COVERAGE_DIR)/coverage/*.cover > $(COVERAGE_PROFILE)
 	@$(GO) tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_HTML)
 	@$(GOCOV) convert $(COVERAGE_PROFILE) | $(GOCOVXML) > $(COVERAGE_XML)
+
+install: ${BUILD_DIR}
+	mkdir -p ~/.local/bin
+	go build -o ${BUILD_DIR}/oidctl main.go
+	cp ${BUILD_DIR}/oidctl ${INSTALL_DIR}
